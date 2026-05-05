@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pratrx</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Lexend Deca', sans-serif; cursor: crosshair; }
+        body, html { height: 100%; background: #000; overflow: hidden; color: white; }
+
+        /* VIDEO BACKGROUND */
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: brightness(0.4) blur(1px);
+            background-color: black; /* Shows black while loading */
+        }
+
+        /* ENTRY SCREEN */
+        #entry-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 1s ease;
+        }
+        #entry-screen.fade-out { opacity: 0; pointer-events: none; }
+        .click-text { letter-spacing: 5px; text-transform: uppercase; font-size: 14px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+        /* CENTERED WRAPPER */
+        .wrapper { 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* CENTERED CARD */
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 35px; 
+            width: 90%; 
+            max-width: 380px;
+            border-radius: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            text-align: center;
+            opacity: 0; 
+            transform: translateY(40px);
+            transition: all 1s ease-out;
+        }
+        .card.show { opacity: 1; transform: translateY(0); }
+
+        .pfp { 
+            width: 90px; 
+            height: 90px; 
+            border-radius: 50%; 
+            margin-bottom: 15px; 
+            border: 2px solid rgba(255, 255, 255, 0.2); 
+            object-fit: cover;
+        }
+
+        /* GLITCH NAME */
+        .glitch-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .glitch {
+            position: relative;
+            display: inline-block;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -1px;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+            animation: glitch-anim2 1s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.85deg); }
+            100% { clip: rect(67px, 9999px, 62px, 0); transform: skew(0.6deg); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.1deg); }
+            100% { clip: rect(15px, 9999px, 90px, 0); transform: skew(0.2deg); }
+        }
+
+        #equalizer { width: 100%; max-width: 250px; height: 50px; margin-bottom: 10px; }
+
+        .music-player { width: 100%; margin: 15px 0; }
+        #seek-slider {
+            width: 100%; height: 4px; appearance: none; cursor: pointer;
+            background: rgba(255, 255, 255, 0.2); border-radius: 5px; outline: none;
+        }
+        #seek-slider::-webkit-slider-thumb { appearance: none; height: 10px; width: 10px; background: #fff; border-radius: 50%; }
+        .time-display { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-top: 5px; }
+
+        .bio-text { font-size: 12px; color: #aaa; margin-bottom: 5px; }
+
+        .socials { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 20px; }
+        .btn {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff; padding: 10px; text-decoration: none; border-radius: 8px;
+            font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s;
+        }
+        .btn:hover { background: rgba(255, 255, 255, 0.12); transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div id="entry-screen" onclick="start()">
+        <p class="click-text">[ CLICK TO ENTER ]</p>
+    </div>
+
+    <!-- Added preload and error logging -->
+    <video id="bg-video" loop muted playsinline preload="auto">
+        <source src="vader.mp4" type="video/mp4">
+    </video>
+
+    <audio id="audio" loop crossorigin="anonymous">
+        <source src="https://archive.org/download/LoveSongs_201803/Dido%20-%20Thank%20you.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="wrapper">
+        <div class="card" id="card">
+            <img src="https://r2.guns.lol/9d437e2b-e801-409e-84a1-0b0e932d2cbe.webp" class="pfp" alt="pfp">
+            
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="Pratrx">Pratrx</h1>
+            </div>
+
+            <canvas id="equalizer"></canvas>
+
+            <div class="music-player">
+                <input type="range" id="seek-slider" value="0">
+                <div class="time-display">
+                    <span id="current-time">0:00</span>
+                    <span id="duration-time">3:38</span>
+                </div>
+            </div>
+
+            <p class="bio-text">"I'm wondering why I got out of bed at all..."</p>
+
+            <div class="socials">
+                <a href="#" class="btn"><i class="fa-brands fa-youtube"></i> Youtube</a>
+                <a href="#" class="btn"><i class="fa-brands fa-github"></i> Github</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio');
+        const video = document.getElementById('bg-video');
+        const slider = document.getElementById('seek-slider');
+
+        // VIDEO DEBUGGER: Run this to see if the file is being found
+        video.addEventListener('error', function(e) {
+            console.error("CRITICAL: Video file 'vader.mp4' was not found or could not be loaded.");
+            console.log("Check if the file is in the same folder and named correctly.");
+        }, true);
+
+        function start() {
+            document.getElementById('entry-screen').classList.add('fade-out');
+            document.getElementById('card').classList.add('show');
+            
+            console.log("Attempting to play video...");
+            video.play().then(() => {
+                console.log("Video playing successfully!");
+            }).catch(e => {
+                console.warn("Video play blocked or failed. Error:", e);
+            });
+
+            audio.play();
+            
+            setupVisualizer();
+            setupTabAnimation();
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            slider.value = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('current-time').innerText = format(audio.currentTime);
+            if (!isNaN(audio.duration)) document.getElementById('duration-time').innerText = format(audio.duration);
+        });
+
+        slider.addEventListener('input', () => {
+            audio.currentTime = (slider.value / 100) * audio.duration;
+        });
+
+        function format(s) {
+            let m = Math.floor(s / 60);
+            let sc = Math.floor(s % 60);
+            return m + ":" + (sc < 10 ? "0" + sc : sc);
+        }
+
+        function setupVisualizer() {
+            const canvas = document.getElementById("equalizer");
+            const ctx = canvas.getContext("2d");
+            const aCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = aCtx.createAnalyser();
+            const source = aCtx.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(aCtx.destination);
+            analyser.fftSize = 64;
+            const bufferLength = analyser.frequencyBinCount;
+            const data = new Uint8Array(bufferLength);
+
+            function draw() {
+                requestAnimationFrame(draw);
+                analyser.getByteFrequencyData(data);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let barWidth = (canvas.width / bufferLength) * 2;
+                let x = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    let h = data[i] / 4;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${data[i]/250})`;
+                    ctx.fillRect(x, canvas.height - h, barWidth - 1, h);
+                    x += barWidth;
+                }
+            }
+            draw();
+        }
+
+        function setupTabAnimation() {
+            const titles = ["p", "pr", "pra", "prat", "pratrx", "prat"];
+            let i = 0;
+            setInterval(() => { document.title = titles[i]; i = (i + 1) % titles.length; }, 400);
+        }
+    </script>
+</body>
+</html>
