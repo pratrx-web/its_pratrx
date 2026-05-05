@@ -141,8 +141,9 @@
     </div>
 
     <!-- Added preload and error logging -->
-<video id="bg-video" autoplay loop muted playsinline webkit-playsinline>
-  <source src="vader.mp4" type="video/mp4">
+<video id="bg-video" autoplay loop muted playsinline webkit-playsinline preload="auto">
+  <source src="./vader.mp4" type="video/mp4">
+  Your browser does not support the video tag.
 </video>
 
     <audio id="audio" loop crossorigin="anonymous">
@@ -211,6 +212,9 @@
 
         video.addEventListener('loadeddata', () => {
     console.log("Video loaded successfully");
+});
+        video.addEventListener('canplay', () => {
+    console.log("Video can play");
 });
         audio.addEventListener('timeupdate', () => {
             slider.value = (audio.currentTime / audio.duration) * 100;
