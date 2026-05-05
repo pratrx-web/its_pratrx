@@ -209,6 +209,9 @@
     setupTabAnimation();
 }
 
+        video.addEventListener('loadeddata', () => {
+    console.log("Video loaded successfully");
+});
         audio.addEventListener('timeupdate', () => {
             slider.value = (audio.currentTime / audio.duration) * 100;
             document.getElementById('current-time').innerText = format(audio.currentTime);
