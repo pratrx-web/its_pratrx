@@ -141,7 +141,7 @@
     </div>
 
     <!-- Added preload and error logging -->
-    <video id="bg-video" autoplay loop muted playsinline>
+<video id="bg-video" autoplay loop muted playsinline webkit-playsinline>
   <source src="videos/vader.mp4" type="video/mp4">
 </video>
 
@@ -188,21 +188,26 @@
         }, true);
 
         function start() {
-            document.getElementById('entry-screen').classList.add('fade-out');
-            document.getElementById('card').classList.add('show');
-            
-            console.log("Attempting to play video...");
-            video.play().then(() => {
-                console.log("Video playing successfully!");
-            }).catch(e => {
-                console.warn("Video play blocked or failed. Error:", e);
-            });
+    document.getElementById('entry-screen').classList.add('fade-out');
+    document.getElementById('card').classList.add('show');
 
-            audio.play();
-            
-            setupVisualizer();
-            setupTabAnimation();
-        }
+    // 🔥 FIX: ensure browser allows playback
+    video.muted = true;
+    video.currentTime = 0;
+
+    video.play().then(() => {
+        console.log("Video playing successfully!");
+    }).catch(e => {
+        console.warn("Video play blocked:", e);
+    });
+
+    audio.play().catch(e => {
+        console.warn("Audio blocked:", e);
+    });
+
+    setupVisualizer();
+    setupTabAnimation();
+}
 
         audio.addEventListener('timeupdate', () => {
             slider.value = (audio.currentTime / audio.duration) * 100;
