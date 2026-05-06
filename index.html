@@ -62,11 +62,11 @@
             flex-direction: column;
             align-items: center; 
             text-align: center;
-            opacity: 0; 
+            opacity: 0.8; 
             transform: translateY(40px);
             transition: all 1s ease-out;
         }
-        .card.show { opacity: 1; transform: translateY(0); }
+        .card.show { opacity: 0.7; transform: translateY(0); }
 
         .pfp { 
             width: 90px; 
@@ -119,13 +119,44 @@
 
         #equalizer { width: 100%; max-width: 250px; height: 50px; margin-bottom: 10px; }
 
-        .music-player { width: 100%; margin: 15px 0; }
+        .music-player { width: 100%; margin: 15px 0; 
+      }
+      .soundtrack:hover {
+  box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 80px #0ff;
+}
         #seek-slider {
             width: 100%; height: 4px; appearance: none; cursor: pointer;
             background: rgba(255, 255, 255, 0.2); border-radius: 5px; outline: none;
         }
-        #seek-slider::-webkit-slider-thumb { appearance: none; height: 10px; width: 10px; background: #fff; border-radius: 50%; }
-        .time-display { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-top: 5px; }
+        #seek-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+
+  /* White glow */
+  box-shadow: 0 0 7px #fff, 0 0 7px #fff;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Stronger glow on hover */
+#seek-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 15px #fff, 0 0 30px #fff;
+}
+
+/* Optional pulsating animation */
+@keyframes pulseWhite {
+  from { box-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+  to   { box-shadow: 0 0 20px #fff, 0 0 40px #fff; }
+}
+
+#seek-slider::-webkit-slider-thumb {
+  animation: pulseWhite 1.5s infinite alternate;
+}
+
 
         .bio-text { font-size: 12px; color: #aaa; margin-bottom: 5px; }
 
@@ -175,8 +206,8 @@
             <p class="bio-text">"I'm wondering why I got out of bed at all..."</p>
 
             <div class="socials">
-                <a href="#" class="btn"><i class="fa-brands fa-youtube"></i> Youtube</a>
-                <a href="#" class="btn"><i class="fa-brands fa-github"></i> Github</a>
+                <a href="https://youtube/@pratrxx" class="btn"><i class="fa-brands fa-youtube"></i> Youtube</a>
+                <a href="https://github.com/" class="btn"><i class="fa-brands fa-github"></i> Github</a>
             </div>
         </div>
     </div>
