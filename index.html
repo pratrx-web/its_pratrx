@@ -229,7 +229,7 @@ url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
     </div>
 
     <audio id="audio" loop crossorigin="anonymous">
-        <source src="https://archive.org/download/LoveSongs_201803/Dido%20-%20Thank%20you.mp3" type="audio/mpeg">
+        <source src="https://cdn.jsdelivr.net/gh/pratrx-web/its_pratrx@main/videos/dido.mp3" type="audio/mpeg">
     </audio>
  
     <div class="wrapper">
@@ -278,7 +278,7 @@ url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
     }, 2000); // 2 second delay
   });
         const audio = document.getElementById('audio');
-      audio.currentTime = 40;
+      audio.currentTime = 0;
       audio.volume = 0; // start muted
     let fade = setInterval(() => {
       if (audio.volume < 1) {
