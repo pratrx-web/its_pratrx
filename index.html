@@ -15,12 +15,11 @@
         /* VIDEO BACKGROUND */
         #bg-video {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            transform: translate(-50%, -50%);
             object-fit: cover;
             filter: brightness(0.4) blur(1px);
             background-color: black; /* Shows black while loading */
@@ -140,8 +139,8 @@
         <p class="click-text">[ CLICK TO ENTER ]</p>
     </div>
 
-    <!-- Added preload and error logging -->
-<video id="bg-video" autoplay loop muted playsinline webkit-playsinline preload="auto">
+    <!-- Video background - removed autoplay to prevent blocking -->
+<video id="bg-video" loop muted playsinline webkit-playsinline preload="auto">
   <source src="https://raw.githubusercontent.com/pratrx-web/its_pratrx/main/videos/vader.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
