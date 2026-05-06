@@ -142,7 +142,7 @@
 
     <!-- Added preload and error logging -->
 <video id="bg-video" autoplay loop muted playsinline webkit-playsinline preload="auto">
-  <source src="./videos/vader.mp4" type="video/mp4">
+  <source src="https://raw.githubusercontent.com/pratrx-web/its_pratrx/main/videos/vader.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
     <audio id="audio" loop crossorigin="anonymous">
@@ -215,7 +215,7 @@
         video.addEventListener('canplay', () => {
     console.log("Video can play");
 });
-         audio.addEventListener('timeupdate', () => {
+        audio.addEventListener('timeupdate', () => {
             slider.value = (audio.currentTime / audio.duration) * 100;
             document.getElementById('current-time').innerText = format(audio.currentTime);
             if (!isNaN(audio.duration)) document.getElementById('duration-time').innerText = format(audio.duration);
