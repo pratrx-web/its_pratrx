@@ -1,0 +1,5 @@
+import {Store} from '../storage/store.js';import {autoGroupTabs,suspendInactiveTabs} from '../modules/tab-intelligence.js';
+chrome.runtime.onInstalled.addListener(()=>{chrome.alarms.create('pookie-theme',{periodInMinutes:15});chrome.alarms.create('pookie-memory',{periodInMinutes:30})});
+chrome.commands.onCommand.addListener(async c=>{const [tab]=await chrome.tabs.query({active:true,currentWindow:true});if(!tab?.id)return;if(c==='command-palette')chrome.tabs.sendMessage(tab.id,{type:'POOKIE_DASHBOARD'});if(c==='toggle-focus')chrome.tabs.sendMessage(tab.id,{type:'POOKIE_TOGGLE_FOCUS'})});
+chrome.alarms.onAlarm.addListener(async a=>{if(a.name==='pookie-theme'){const s=await Store.settings();await Store.saveSettings({visual:{...s.visual,themeMode:s.visual.themeMode}});const tabs=await chrome.tabs.query({});for(const t of tabs)if(t.id)chrome.tabs.sendMessage(t.id,{type:'POOKIE_APPLY'}).catch(()=>{})}if(a.name==='pookie-memory')suspendInactiveTabs()});
+chrome.runtime.onMessage.addListener((m,_s,send)=>{if(m.type==='POOKIE_GROUP_TABS')autoGroupTabs().then(()=>send({ok:true}));return true});

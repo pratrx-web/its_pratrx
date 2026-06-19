@@ -1,0 +1,2 @@
+import type {PookieSettings} from '../lib/types.js';
+export class CursorEngine{dot?:HTMLElement;apply(s:PookieSettings){if(s.cursor.mode==='off'){this.dot?.remove();this.dot=undefined;return}this.dot??=document.body.appendChild(Object.assign(document.createElement('div'),{id:'pookie-cursor'}));document.addEventListener('pointermove',e=>{this.dot!.style.transform=`translate(${e.clientX}px,${e.clientY}px)`},{passive:true})}}
